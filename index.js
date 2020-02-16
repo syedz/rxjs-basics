@@ -8,22 +8,33 @@ import { Observable } from 'rxjs';
  */
 const observer = {
     next: value => console.log('next', value),
-    error: value => console.log('error', value),
-    complete: () => console.log('complete!'),
+    error: error => console.log('error', error),
+    complete: () => console.log('complete!')
 };
-
+  
 const observable = new Observable(subscriber => {
-    subscriber.next('Hello');
-    subscriber.next('World');
-    subscriber.complete();
+    let count = 0;
+    // Observables can deliver 0:M values synchronous or asynchronously
+    const id = setInterval(() => {
+        subscriber.next(count);
+        // calling complete also invokes the cleanup function you return
+        subscriber.complete();
+        count += 1;
+    }, 1000);
+
+    /*
+        * You can return a function to clean up any resources that were
+        * created with subscription. In this case, we need to clear 
+        * the active interval. When using RxJS's built in creation operators
+        * this will be handled for us.
+        */
+    return () => {
+        console.log('called');
+        clearInterval(id);
+    };
 });
 
-// You can pass an observer object, with any of the three callbacks
-// observable.subscribe(observer);
-
-/*
- * Or just supply 0 to all functions (next, error, complete).
- * If I'm supplying more than next callback, I will use object
- * as it's a bit more clear.
- */
-observable.subscribe(value => console.log('next', value));
+// adding logs to show observable emitting asynchronously
+console.log('before');
+observable.subscribe(observer);
+console.log('after');
