@@ -1,33 +1,28 @@
-import { fromEvent } from "rxjs";
+import { of, range } from "rxjs";
 
 const observer = {
     next: val => console.log('next', val),
-    error: err => console.log('error', val),
+    error: err => console.log('error', err),
     complete: () => console.log('complete!')
 };
 
 /*
- *  Create streams from events, given target and event name.
+ * Emits each item you provide in sequence, synchronously.
+ * of literally just loops through the items and emits them,
+ * there is no flattening involved. For instance, if you pass an
+ * array the entire array will be emitted, not each item within
+ * the array.
  */
-const source$ = fromEvent(document, 'keyup');
+const source$ = of(1,2,3,4,5);
+
+console.log('proving');
+source$.subscribe(observer);
+console.log('this is synchronous');
 
 /*
- *  Each subscription creates it's own execution path between
- *  observable and observer (also known as unicasting). So, in this case,
- *  every subscription will wire up a new event listener.
+ * If you just want to emit numbers between a specific range
+ * you could also use the range operator instead.
  */
-const subOne = source$.subscribe(observer);
-const subTwo = source$.subscribe(observer);
-
-setTimeout(() => {
-  /*
-   *  For long running observables we need to make sure to clean
-   *  them up when we are finished to prevent memory leaks and
-   *  unintended behavior. In this case, we are cleaning up
-   *  one subscription but not the other, leaving it active.
-   *  We will learn different techniques to automate this
-   *  process in an upcoming lesson.
-   */
-  console.log('unsubscribing');
-  subOne.unsubscribe();
-}, 3000);
+console.log('proving');
+range(1,5).subscribe(observer);
+console.log('this is synchronous');
