@@ -15,22 +15,15 @@ const observer = {
 const observable = new Observable(subscriber => {
     subscriber.next('Hello');
     subscriber.next('World');
-    /*
-     * Once complete is called, observable will be cleaned up
-     * and no future values delivered.
-     */
     subscriber.complete();
-    /*
-     * These values will not be logged as the observable
-     * has already completed.
-     */
-    subscriber.next('Hello');
-    subscriber.next('World');
 });
 
-/* 
- * Subscribe hooks observer up to observable, beginning execution.
- * This creates a 1 to 1 relationship between the producer
- * (observable) and the consumer (observer).
+// You can pass an observer object, with any of the three callbacks
+// observable.subscribe(observer);
+
+/*
+ * Or just supply 0 to all functions (next, error, complete).
+ * If I'm supplying more than next callback, I will use object
+ * as it's a bit more clear.
  */
-observable.subscribe(observer);
+observable.subscribe(value => console.log('next', value));
