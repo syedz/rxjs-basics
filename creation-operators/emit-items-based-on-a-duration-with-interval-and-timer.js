@@ -1,3 +1,7 @@
+import '../styles.css';
+console.clear();
+
+// begin lesson code
 import { interval, timer } from 'rxjs';
 
 /*
@@ -11,7 +15,7 @@ const interval$ = interval(1000);
  * We'll just supply a function for next in this case,
  * rather than observer object.
  */
-// interval$.subscribe(console.log);
+interval$.subscribe(console.log);
 
 /*
  * If you need the first item to be emitted on an interval
